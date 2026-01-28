@@ -2,7 +2,7 @@ import itertools
 import random
 
 
-class Minesweeper():
+class Minesweeper:
     """
     Minesweeper game representation
     """
@@ -84,7 +84,7 @@ class Minesweeper():
         return self.mines_found == self.mines
 
 
-class Sentence():
+class Sentence:
     """
     Logical statement about a Minesweeper game
     A sentence consists of a set of board cells,
@@ -104,12 +104,17 @@ class Sentence():
     def known_mines(self):
         """
         Returns the set of all cells in self.cells known to be mines.
+         Under what circumstances do you know for sure that a sentence’s cells are mines?
+         When there is a 1 on three sides
         """
+
+        return
         raise NotImplementedError
 
     def known_safes(self):
         """
         Returns the set of all cells in self.cells known to be safe.
+         under what circumstances do you know for sure that a sentence’s cells are safe?
         """
         raise NotImplementedError
 
@@ -128,7 +133,7 @@ class Sentence():
         raise NotImplementedError
 
 
-class MinesweeperAI():
+class MinesweeperAI:
     """
     Minesweeper game player
     """
