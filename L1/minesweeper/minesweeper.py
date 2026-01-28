@@ -105,10 +105,9 @@ class Sentence:
         """
         Returns the set of all cells in self.cells known to be mines.
          Under what circumstances do you know for sure that a sentence’s cells are mines?
-         When there is a 1 on three sides
         """
-
-        return
+        if len(self.cells) == self.count != 0:
+            return self.cells
         raise NotImplementedError
 
     def known_safes(self):
@@ -116,6 +115,9 @@ class Sentence:
         Returns the set of all cells in self.cells known to be safe.
          under what circumstances do you know for sure that a sentence’s cells are safe?
         """
+        if len(self.cells) == 0:
+            return self.cells
+
         raise NotImplementedError
 
     def mark_mine(self, cell):
