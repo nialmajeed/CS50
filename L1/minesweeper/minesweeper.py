@@ -196,6 +196,47 @@ class MinesweeperAI:
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
+        # 1 Mark as a move
+        self.moves_made.add(cell)
+        # 2 Mark as safe
+        self.safes.add(cell)
+
+        # 3
+        # The function should add a new sentence to the AI’s knowledge base, based on the value of cell and count,
+        # to indicate that count of the cell’s neighbors are mines.
+        # Be sure to only include cells whose state is still undetermined in the sentence.
+        undetermined_cells = set()
+        for i in range(cell[0] - 1, cell[0] + 2):
+            for j in range(cell[1] - 1, cell[1] + 2):
+                # Dont include current cell being reviewed
+                if (i, j) == cell:
+                    continue
+                # Dont include known mines
+                if (i, j) in self.mines:
+                    continue
+                # Dont include known safes
+                if (i, j) in self.safes:
+                    continue
+                # Anything else in the gird can be confirmed to be within the sentance
+                # Maybe an else statment could do
+                if 0 <= i < self.height and 0 <= j < self.width:
+                    undetermined_cells.add((i, j))
+
+        # New setance and add to knowledge base
+        new_sentance = Sentence(undetermined_cells, count)
+
+        self.knowledge.append(new_sentance)
+
+       # 4) mark any additional cells as safe or as mines
+       #       if it can be concluded based on the AI's knowledge base
+        for Sentance in self.knowledge:
+            mines = Sentence.known_mines()
+            if mines:
+
+
+                
+
+
         raise NotImplementedError
 
     def make_safe_move(self):
