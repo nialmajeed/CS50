@@ -227,15 +227,32 @@ class MinesweeperAI:
 
         self.knowledge.append(new_sentance)
 
-       # 4) mark any additional cells as safe or as mines
-       #       if it can be concluded based on the AI's knowledge base
+        # 4) mark any additional cells as safe or as mines
+        #       if it can be concluded based on the AI's knowledge base
         for Sentance in self.knowledge:
-            mines = Sentence.known_mines()
+            # identify all known mines
+            mines = Sentance.known_mines()
+            # ensure each sentance is updated with the known mines and thus have them removes
             if mines:
+                for cell in mines.copy():
+                    # marking the cell as a mine - which updates the mines and also goes into the serntence removes the mine and reduces the count
+                    self.mark_mine(cell)
 
+            # And similar for safes
+            safes = Sentance.known_safes()
+            if safes:
+                for cell in safes.copy():
+                    self.mark_safe(cell)
 
-                
+        # Remove empty sentence objects from list using list comprehension
+        empty_sentence = Sentence(set(), 0)
+        self.knowledge = [
+            sentence for sentence in self.knowledge if sentence != empty_sentence
+        ]
 
+        #    5) add any new sentences to the AI's knowledge base
+        #       if they can be inferred from existing knowledge
+        len(self.knowledge)
 
         raise NotImplementedError
 
