@@ -252,7 +252,26 @@ class MinesweeperAI:
 
         #    5) add any new sentences to the AI's knowledge base
         #       if they can be inferred from existing knowledge
-        len(self.knowledge)
+        SentanceNo = len(self.knowledge)
+        # if all cells in sentence B are in Sentence A = subset and we can make an new setence out of it
+
+        for i in self.knowledge:
+            for Sentance in self.knowledge:
+                if i is Sentance:
+                    continue
+                if i == Sentance:
+                    self.knowledge.remove(Sentance)
+
+                if Sentance.cells.issubset(i.cells):
+                    subset_cells = Sentance.cells.difference(i.cells)
+                    subset_count = Sentance.count - i.count
+
+                    newknowledge = Sentance(subset_cells, subset_count)
+
+                if newknowledge not in self.knowledge:
+                    self.knowledge.append(newknowledge)
+                else:
+                    continue
 
         raise NotImplementedError
 
