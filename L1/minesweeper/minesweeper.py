@@ -307,8 +307,17 @@ class MinesweeperAI:
             1) have not already been chosen, and
             2) are not known to be mines
         """
+        possible_cells = []
+        for i in range(self.height):
+            for j in range(self.width):
+                cell = (i, j)
+                if cell not in self.moves_made and cell not in self.mines:
+                    possible_cells.append(cell)
 
+        if len(possible_cells) == 0:
+            return None
+        else:
+            # Return a random cell chosen from possible moves
+            return random.choice(possible_cells)  
 
-
-        
         raise NotImplementedError
