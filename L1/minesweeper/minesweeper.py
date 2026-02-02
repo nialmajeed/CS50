@@ -106,19 +106,19 @@ class Sentence:
         Returns the set of all cells in self.cells known to be mines.
          Under what circumstances do you know for sure that a sentence’s cells are mines?
         """
-        if len(self.cells) == self.count != 0:
+        if len(self.cells) == self.count and self.count != 0:
             return self.cells
-        raise NotImplementedError
+        else:
+            emptycells = set()
+            return emptycells
 
     def known_safes(self):
         """
         Returns the set of all cells in self.cells known to be safe.
          under what circumstances do you know for sure that a sentence’s cells are safe?
         """
-        if len(self.cells) == 0:
+        if self.count == 0:
             return self.cells
-
-        raise NotImplementedError
 
     def mark_mine(self, cell):
         """
@@ -129,8 +129,6 @@ class Sentence:
             self.cells.remove(cell)
             self.count -= 1
 
-        raise NotImplementedError
-
     def mark_safe(self, cell):
         """
         Updates internal knowledge representation given the fact that
@@ -138,8 +136,6 @@ class Sentence:
         """
         if cell in self.cells:
             self.cells.remove(cell)
-
-        raise NotImplementedError
 
 
 class MinesweeperAI:
@@ -284,21 +280,17 @@ class MinesweeperAI:
         This function may use the knowledge in self.mines, self.safes
         and self.moves_made, but should not modify any of those values.
         """
-        #not be in self.moves_made,self.mines but be in self.safes
+        # not be in self.moves_made,self.mines but be in self.safes
 
         if len(self.safes) == 0:
-            return None 
+            return None
         for safecells in self.safes:
-            if safecells not in self.moves_made
+            if safecells not in self.moves_made:
                 return safecells
             else:
-                return None 
+                return None
 
-        
-
-        #Get safe moves and ensure its not in 
-
-        raise NotImplementedError
+        # Get safe moves and ensure its not in
 
     def make_random_move(self):
         """
@@ -318,6 +310,4 @@ class MinesweeperAI:
             return None
         else:
             # Return a random cell chosen from possible moves
-            return random.choice(possible_cells)  
-
-        raise NotImplementedError
+            return random.choice(possible_cells)
