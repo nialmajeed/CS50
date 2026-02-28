@@ -33,17 +33,3 @@ print_ai_status()
 move, nearby_count = (3, 3), 0
 ai.add_knowledge(move, nearby_count)
 print_ai_status()
-
-# Setup for new sentence inference logic test
-move, nearby_count = (4, 2), 1
-ai.add_knowledge(move, nearby_count)
-print_ai_status()
-
-# Tests subset inference logic for new sentences (5th requirement)
-move, nearby_count = (7, 2), 2
-ai.add_knowledge(move, nearby_count)
-print_ai_status()
-
-move, nearby_count = (5, 2), 1
-ai.add_knowledge(move, nearby_count)
-print_ai_status()
