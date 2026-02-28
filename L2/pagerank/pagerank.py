@@ -57,7 +57,27 @@ def transition_model(corpus, page, damping_factor):
     linked to by `page`. With probability `1 - damping_factor`, choose
     a link at random chosen from all pages in the corpus.
     """
+    '''
+    path = f'../{corpus}'
+    No_Pages = len([f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))])
+    '''
+    #We need to identify the number of pages in the corpus (TODO)
+    No_pages = 1 
+  
+
+    condition1 = ((1-damping_factor)/(No_pages))
+
+  # We need an interative process for each page in the corpus(TODO)
+  #need to get the number of links for each page from corpus (TODO)
+    condition2_set = []
+    for page in corpus: 
+        No_links = 
+        condition2 = (/Nolinks)
+        condition2_set.append(condition2)
+    sum_condition2=damping_factor*sum(condition2_set)
     raise NotImplementedError
+    # Example corpus value: {"1.html": {"2.html", "3.html"}, "2.html": {"3.html"}, "3.html": {"2.html"}}
+    #  target output : {"1.html": 0.05, "2.html": 0.475, "3.html": 0.475}
 
 
 def sample_pagerank(corpus, damping_factor, n):
