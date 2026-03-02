@@ -57,24 +57,74 @@ def transition_model(corpus, page, damping_factor):
     linked to by `page`. With probability `1 - damping_factor`, choose
     a link at random chosen from all pages in the corpus.
     """
-    '''
-    path = f'../{corpus}'
-    No_Pages = len([f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))])
-    '''
-    #We need to identify the number of pages in the corpus (TODO)
-    No_pages = 1 
-  
+    #create a new directory based on corpus
+    prob_d = {page_name : 0 for page_name in corpus}
+    
+    #links + number of links
+    links = corpus(page)
+    no_links = len(links)
 
+    #We need to identify the number of pages in the corpus 
+    No_pages = len(corpus)
+
+    #IF there are no links - what happens
+    if no_links == 0: 
+        for page_name in prob_d:
+            prob_d[page_name] = 1 / len(No_pages)
+        return prob_d
+    
+
+    #Probability of picking a random page
     condition1 = ((1-damping_factor)/(No_pages))
 
-  # We need an interative process for each page in the corpus(TODO)
-  #need to get the number of links for each page from corpus (TODO)
+  # Poribability of picking a linked page 
+    condition2 =  ((damping_factor)/(No_pages))
+
+    # Retunr probabilities of each one
+    #We first add the probability of conition1 (probability of picking a random page)
+    for page_name in prob_d:
+        prob_d[page_name] += condition1
+    
+    #Then we add condition 2 - probability of picking a linked page from said page 
+        if page_name in corpus[page]:
+            prob_d[page_name] += condition2
+
+    return prob_d
+
+    '''
+      condition = []
+    for link in no_links:
+        iterative = damping_factor/no_links
+        condition.append(iterative)
+    
+    condition2 = damping_factor*sum(condition)
+
+    PR = condition1 + condition2  
+    
+    '''
+
+
+    #we need to provide the probabaility of going to a given linked page given the starting "page" (TODO)
+
+
+    return 
+    
+
+
+    
+   
+'''
     condition2_set = []
     for page in corpus: 
         No_links = 
         condition2 = (/Nolinks)
         condition2_set.append(condition2)
     sum_condition2=damping_factor*sum(condition2_set)
+'''
+        
+
+
+
     raise NotImplementedError
     # Example corpus value: {"1.html": {"2.html", "3.html"}, "2.html": {"3.html"}, "3.html": {"2.html"}}
     #  target output : {"1.html": 0.05, "2.html": 0.475, "3.html": 0.475}
