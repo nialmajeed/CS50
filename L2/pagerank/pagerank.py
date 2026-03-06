@@ -97,42 +97,41 @@ def sample_pagerank(corpus, damping_factor, n):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    #initial sample 
+    # initial sample
     corpus_list = list(corpus.keys())
     random_page = random.choice(corpus_list)
 
-    #we need a distribution to track how many times each page is visited/sampled
+    # we need a distribution to track how many times each page is visited/sampled
     samples = {page_name: 0 for page_name in corpus}
-    #add initial visit 
-    samples(random_page)  +=1
+    # add initial visit
+    samples[random_page] += 1
 
-    # use random value to hep pick next page based on transition model:
-    random_v = random.random()
-    total_prob = 0
+    for num in range(0, n - 1):
 
-    #To get the next probability after initial 
-    T_model = transition_model(corpus, random_page, damping_factor)
+        # To get the next probability after initial
+        T_model = transition_model(corpus, random_page, damping_factor)
 
-    for page_name, prob in T_model.items():
-        Total_page_prob += prob
-        #if random prob is less than page prob then pick it 
-        if random_v <= total_prob:
-            curr_page = page_name
-            break
+        # use random value to hep pick next page based on transition model:
+        random_v = random.random()
+        total_prob = 0
 
-    samples(curr_page)  +=1
+        for page_name, prob in T_model.items():
+            Total_page_prob += prob
+            # if random prob is less than page prob then pick it
+            if random_v <= total_prob:
+                curr_page = page_name
+                break
 
+        samples[curr_page] += 1
 
     # Normalisation
-    page_rank = {page_name: (sample_no/n) for page_name, sample_no in samples.items()}
+    page_rank = {page_name: (sample_no / n) for page_name, sample_no in samples.items()}
 
-    print('Sum of sample page ranks: ', round(sum(page_rank.values()), 4))
+    print("Sum of sample page ranks: ", round(sum(page_rank.values()), 4))
 
     return page_rank
 
-
     raise NotImplementedError
-
 
 
 def iterate_pagerank(corpus, damping_factor):
@@ -144,8 +143,54 @@ def iterate_pagerank(corpus, damping_factor):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
+    # initial Rank
+    N = len(corpus)
+    initial_rank = 1 / N
+    no_links = (1 - damping_factor) / N
 
-    #check to ensure no changes 0.001
+    # initialise a python dictonary based on the corpus:
+    current_rank = {page_name: initial_rank for page_name in corpus}
+    # initialise a python dictonary based on the corpus for the new rank
+    new_rank = {page_name: 0 for page_name in corpus}
+    # use a while function e.g. while  modulus of (state 2 - state1) > 0.001
+    # This function needs to review the direcotry and see if there is any change more than 0.001 in any of the pages
+
+    rank_dif = initial_rank
+    while rank_dif >= 0.001:
+        # itterations += 1
+        rank_dif = 0
+
+        for page in corpus:
+            surf_prob = 0
+            for Page2 in corpus:
+                # If Page2 has no links it picks randomly any corpus page:
+                if len(corpus[Page2]) == 0:
+                    surf_prob += current_rank[Page2] * initial_rank
+
+                # Elif Page2 has a link to the initial page, it randomly picks a linked page on pag2:
+                elif page in corpus[Page2]:
+                    surf_prob += current_rank[Page2] / len(corpus[Page2])
+                    # Calculate new page rank
+                    rank = no_links + (damping_factor * surf_prob)
+                    new_rank[page] = rank
+
+        # normalisation
+        # sum all values
+        normal = sum(new_rank.values())
+        # divide by each rank by sum of all values for every page in new rank
+        new_rank = {page: (rank / normal) for page, rank in new_rank.items()}
+
+        # Update the rank_dif for the While statment
+        for page in corpus:
+            # use abs() to ensure value is positive
+            rank_change = abs(current_rank[page] - new_rank[page])
+            if rank_change > rank_dif:
+                rank_dif = rank_change
+
+        # update current rank to be the new rank
+        current_rank = new_rank.copy()
+
+    return new_rank
 
     raise NotImplementedError
 
