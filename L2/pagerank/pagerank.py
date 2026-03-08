@@ -58,7 +58,7 @@ def transition_model(corpus, page, damping_factor):
     prob_d = {page_name: 0 for page_name in corpus}
 
     # links + number of links
-    links = corpus(page)
+    links = corpus[page]
     no_links = len(links)
 
     # We need to identify the number of pages in the corpus
@@ -67,14 +67,14 @@ def transition_model(corpus, page, damping_factor):
     # IF there are no links - what happens
     if no_links == 0:
         for page_name in prob_d:
-            prob_d[page_name] = 1 / len(No_pages)
+            prob_d[page_name] = (damping_factor) / No_pages
         return prob_d
 
     # Probability of picking a random page
     condition1 = (1 - damping_factor) / (No_pages)
 
     # Poribability of picking a linked page
-    condition2 = (damping_factor) / (No_pages)
+    condition2 = (damping_factor) / (no_links)
 
     # Retunr probabilities of each one
     # We first add the probability of conition1 (probability of picking a random page)
@@ -82,7 +82,7 @@ def transition_model(corpus, page, damping_factor):
         prob_d[page_name] += condition1
 
         # Then we add condition 2 - probability of picking a linked page from said page
-        if page_name in corpus[page]:
+        if page_name in links:
             prob_d[page_name] += condition2
 
     return prob_d
@@ -98,17 +98,17 @@ def sample_pagerank(corpus, damping_factor, n):
     PageRank values should sum to 1.
     """
     # initial sample
-    corpus_list = list(corpus.keys())
+    corpus_list = list(corpus)
     random_page = random.choice(corpus_list)
 
-    # we need a distribution to track how many times each page is visited/sampled
+    # distribution to track how many times each page is sampled
     samples = {page_name: 0 for page_name in corpus}
-    # add initial visit
+    # add initial sample visited
     samples[random_page] += 1
 
     for num in range(0, n - 1):
 
-        # To get the next probability after initial
+        # next probability after initial
         T_model = transition_model(corpus, random_page, damping_factor)
 
         # use random value to hep pick next page based on transition model:
@@ -116,13 +116,13 @@ def sample_pagerank(corpus, damping_factor, n):
         total_prob = 0
 
         for page_name, prob in T_model.items():
-            Total_page_prob += prob
+            total_prob += prob
             # if random prob is less than page prob then pick it
             if random_v <= total_prob:
-                curr_page = page_name
+                random_page = page_name
                 break
 
-        samples[curr_page] += 1
+        samples[random_page] += 1
 
     # Normalisation
     page_rank = {page_name: (sample_no / n) for page_name, sample_no in samples.items()}
@@ -171,8 +171,8 @@ def iterate_pagerank(corpus, damping_factor):
                 elif page in corpus[Page2]:
                     surf_prob += current_rank[Page2] / len(corpus[Page2])
                     # Calculate new page rank
-                    rank = no_links + (damping_factor * surf_prob)
-                    new_rank[page] = rank
+                rank = no_links + (damping_factor * surf_prob)
+                new_rank[page] = rank
 
         # normalisation
         # sum all values
