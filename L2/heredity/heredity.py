@@ -164,15 +164,6 @@ def joint_probability(people, one_gene, two_genes, have_trait):
     """
     no_gene = [person for person in people if person not in one_gene or two_genes]
 
-    for person in no_gene:
-        if person in have_trait:
-            P_0gene = PROBS["gene"][0] * PROBS["trait"][0][True]
-
-        else:
-            P_0gene = PROBS["gene"][0] * PROBS["trait"][0][False]
-
-        # where is thr output going
-
     for person in one_gene:
 
         # if person is also in Have_Trait
@@ -197,17 +188,36 @@ def joint_probability(people, one_gene, two_genes, have_trait):
     for Person in people:
         Mother = people[Person]["mother"]
         Father = people[Person]["father"]
-        trait = Person in have_trait 
-        Standard_Gene_P= (2 if Person in two_genes else 1 if Person in one_gene else 0 )
+        trait = True if Person in have_trait else False
+        Standard_Gene_P = 2 if Person in two_genes else 1 if Person in one_gene else 0
 
         # If there are no parents then the probabilities come directly from whats given if they have 1,2 oe 0 genes
         if not Mother and Father:
-            Probability = PROBS['gene'][Standard_Gene_P]
+            Probability = PROBS["gene"][Standard_Gene_P]
 
-        # else we can figure out the probability from the parents: 
-        else:
+        # else we can figure out the probability from the parents:
+        elif Mother and Father:
+            if Mother in one_gene:
+                if Mother in have_trait:
+                    MP = PROBS["gene"][1] * PROBS["trait"][1][True]
+                else:
+                    MP = PROBS["gene"][1] * PROBS["trait"][1][False]
+            elif Mother in two_genes:
+                if Mother in have_trait:
+                    MP = PROBS["gene"][2] * PROBS["trait"][2][True]
+                else:
+                    MP = PROBS["gene"][2] * PROBS["trait"][2][False]
 
-            
+            if Father in one_gene:
+                if Father in have_trait:
+                    FP = PROBS["gene"][1] * PROBS["trait"][1][True]
+                else:
+                    FP = PROBS["gene"][1] * PROBS["trait"][1][False]
+            elif Father in two_genes:
+                if Father in have_trait:
+                    FP = PROBS["gene"][2] * PROBS["trait"][2][True]
+                else:
+                    FP = PROBS["gene"][2] * PROBS["trait"][2][False]
 
         # where is thr output going
 
