@@ -144,96 +144,49 @@ def joint_probability(people, one_gene, two_genes, have_trait):
 
     # everyone in set `one_gene` has one copy of the gene
     # if no
-    """
-    for people in one_gene:
 
-    #PM =  Proability that mother has 0 gene - which is probabaility of not having gene or trait
-    Probability_Mother = PROBS["gene"][0] and PROBS["trait"][0][False]
-    # Probability father has 2 gene and trait
-    Probability_Father = PROBS["gene"][2] and PROBS["trait"][2][True]
-
-    #Probability of child =  Probability of mother and not father + Probability of Father and not mother
-    # mother = probabaility of trait with no gene  * mutation
-    # Father = Probability of Trait with 2 genes * (1-mutuation) 
-
-    Probabiity_child =  (PROBS["gene"][0] *  PROBS["mutation"]) + (PROBS["gene"][2] *  (1-PROBS["mutation"]))
-    Proabability_child_notrait =  Probabiity_child * PROBS["trait"][1][False]
-    Joint_probability = Proabability_child_notrait * Probability_Mother *Probability_Father
-    """
-
-    """
-    no_gene = [person for person in people if person not in one_gene or two_genes]
-
-    for person in one_gene:
-
-        # if person is also in Have_Trait
-        if person in have_trait:
-            P_1gene = PROBS["gene"][1] * PROBS["trait"][1][True]
-
-        else:
-            P_1gene = PROBS["gene"][1] * PROBS["trait"][1][False]
-
-        # where is thr output going
-
-    for person in two_genes:
-        # if person is also in Have_Trait
-        if person in have_trait:
-            P_2gene = PROBS["gene"][2] and PROBS["trait"][2][True]
-
-        else:
-            P_2gene = PROBS["gene"][2] and PROBS["trait"][2][False]
-
-    """
     # we want a list of all the mothers, fathers for all the people in people list
+    # we have a joint probabaility set before for statment as joint probabaility will combine for both mother andf father
+    joint_prob = 1
     for Person in people:
         Mother = people[Person]["mother"]
         Father = people[Person]["father"]
         trait = True if Person in have_trait else False
         Standard_Gene_P = 2 if Person in two_genes else 1 if Person in one_gene else 0
+        Probability = 1
 
         # If there are no parents then the probabilities come directly from whats given if they have 1,2 oe 0 genes
         if not Mother and Father:
-            Probability = PROBS["gene"][Standard_Gene_P]
+            Probability *= PROBS["gene"][Standard_Gene_P]
 
-        # else we can figure out the probability from the parents:
-        elif Mother and Father:
-            if Mother in one_gene:
-                if Mother in have_trait:
-                    MP = PROBS["gene"][1] * PROBS["trait"][1][True]
-                else:
-                    MP = PROBS["gene"][1] * PROBS["trait"][1][False]
-            elif Mother in two_genes:
-                if Mother in have_trait:
-                    MP = PROBS["gene"][2] * PROBS["trait"][2][True]
-                else:
-                    MP = PROBS["gene"][2] * PROBS["trait"][2][False]
+        else:
+            mother_inh = Inheritece_P(Mother, one_gene, two_genes)
+            Father_inh = Inheritece_P(Father, one_gene, two_genes)
 
-            if Father in one_gene:
-                if Father in have_trait:
-                    FP = PROBS["gene"][1] * PROBS["trait"][1][True]
-                else:
-                    FP = PROBS["gene"][1] * PROBS["trait"][1][False]
-            elif Father in two_genes:
-                if Father in have_trait:
-                    FP = PROBS["gene"][2] * PROBS["trait"][2][True]
-                else:
-                    FP = PROBS["gene"][2] * PROBS["trait"][2][False]
+        # 2 genes
+        if Standard_Gene_P == 2:
+            Probability *= mother_inh * Father_inh
+        # 1 gene
+        elif Standard_Gene_P == 1:
+            Probability *= ((1 - mother_inh) * Father_inh) + (
+                mother_inh * (1 - Father_inh)
+            )
+        else:
+            Probability *= (1 - mother_inh) * (1 - Father_inh)
 
-        # where is thr output going
+        Probability *= PROBS["trait"][Standard_Gene_P][trait]
 
-    # Probability of child =  Probability of mother and not father + Probability of Father and not mother
-    # mother = probabaility of trait with no gene  * mutation
-    # Father = Probability of Trait with 2 genes * (1-mutuation)
+    return Probability
 
-    Probabiity_child = (PROBS["gene"][0] * PROBS["mutation"]) + (
-        PROBS["gene"][2] * (1 - PROBS["mutation"])
-    )
-    Proabability_child_notrait = Probabiity_child * PROBS["trait"][1][False]
-    Joint_probability = (
-        Proabability_child_notrait * Probability_Mother * Probability_Father
-    )
 
-    raise NotImplementedError
+# This allows us to use the same formula for both mother and father and strwamline the code
+def Inheritece_P(Parent, one_gene, two_genes):
+    if Parent in two_genes:
+        return 1 - PROBS["mutation"]
+    elif Parent in one_gene:
+        return 0.5
+    else:
+        return PROBS["mutation"]
 
 
 def update(probabilities, one_gene, two_genes, have_trait, p):
