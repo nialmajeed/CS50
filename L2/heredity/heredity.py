@@ -118,35 +118,6 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         * everyone not in set` have_trait` does not have the trait.
     """
 
-    """# no parents
-    for person in people:
-        if len(people[1][2][3]) == 0:
-            return PROBS["gene"]
-    """
-
-    # probabaility of one_gene
-    # This is the probability that:
-    # PM =  Proability that mother has 0 gene PROBS[gene][0] and Probs[trait][0][False]
-    # PF =  Probabaility of father has 2 gene PROBS[gene][2] and Probs[Trait][2][True]
-    # PH = Probability from his mother and not father or father and not mother
-    # Probability of mother = PROBS["mutation"] = 0.01
-    # not mother = 1- PM
-    # thus he iwll get it from the father 1-0.99 = 1 - Probs[mutation]
-    # Harry will get the gene from his father with probability 0.99 (this is 1 - PROBS["mutation"]),
-    # but will get the gene from his mother with probability 0.01 (the chance of a mutation).
-    # Both of these cases can be added together to get 0.99 * 0.99 + 0.01 * 0.01 = 0.9802,
-    # he probability that Harry has 1 copy of the gene.
-
-    # PHT = Ptrait given Pgene
-    # PROBS["trait"][1][False]  if he has 1 gene and no trait
-    # Therefore Probabaility of harry having the genese and not the trait is PH * PHT
-    # JP = PM * PF * PHT
-
-    # everyone in set `one_gene` has one copy of the gene
-    # if no
-
-    # we want a list of all the mothers, fathers for all the people in people list
-    # we have a joint probabaility set before for statment as joint probabaility will combine for both mother andf father
     joint_prob = 1
     for Person in people:
         Mother = people[Person]["mother"]
@@ -181,6 +152,7 @@ def joint_probability(people, one_gene, two_genes, have_trait):
 
 # This allows us to use the same formula for both mother and father and strwamline the code
 def Inheritece_P(Parent, one_gene, two_genes):
+    # vakues are provided in problem description
     if Parent in two_genes:
         return 1 - PROBS["mutation"]
     elif Parent in one_gene:
@@ -196,6 +168,12 @@ def update(probabilities, one_gene, two_genes, have_trait, p):
     Which value for each distribution is updated depends on whether
     the person is in `have_gene` and `have_trait`, respectively.
     """
+    for person in probabilities:
+        gene = 2 if person in two_genes else 1 if person in one_gene else 0
+        TorF = True if person in have_trait else False
+        probabilities[person]["gene"][gene] += p
+        probabilities[person]["trait"][TorF] += p
+
     raise NotImplementedError
 
 
@@ -204,6 +182,7 @@ def normalize(probabilities):
     Update `probabilities` such that each probability distribution
     is normalized (i.e., sums to 1, with relative proportions the same).
     """
+
     raise NotImplementedError
 
 
