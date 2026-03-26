@@ -122,32 +122,38 @@ def joint_probability(people, one_gene, two_genes, have_trait):
     for Person in people:
         Mother = people[Person]["mother"]
         Father = people[Person]["father"]
+
         trait = True if Person in have_trait else False
         Standard_Gene_P = 2 if Person in two_genes else 1 if Person in one_gene else 0
         Probability = 1
 
         # If there are no parents then the probabilities come directly from whats given if they have 1,2 oe 0 genes
-        if not Mother and Father:
+        if Mother == None:
             Probability *= PROBS["gene"][Standard_Gene_P]
 
         else:
             mother_inh = Inheritece_P(Mother, one_gene, two_genes)
             Father_inh = Inheritece_P(Father, one_gene, two_genes)
 
-        # 2 genes
-        if Standard_Gene_P == 2:
-            Probability *= mother_inh * Father_inh
-        # 1 gene
-        elif Standard_Gene_P == 1:
-            Probability *= ((1 - mother_inh) * Father_inh) + (
-                mother_inh * (1 - Father_inh)
-            )
+            # 2 genes
+            if Standard_Gene_P == 2:
+                Probability *= mother_inh * Father_inh
+            # 1 gene
+            elif Standard_Gene_P == 1:
+                Probability *= ((1 - mother_inh) * Father_inh) + (
+                    mother_inh * (1 - Father_inh)
+                )
+            else:
+                Probability *= (1 - mother_inh) * (1 - Father_inh)
+
+        if Person in have_trait:
+            Probability *= PROBS["trait"][Standard_Gene_P][True]
         else:
-            Probability *= (1 - mother_inh) * (1 - Father_inh)
+            Probability *= PROBS["trait"][Standard_Gene_P][False]
 
-        Probability *= PROBS["trait"][Standard_Gene_P][trait]
+        joint_prob *= Probability
 
-    return Probability
+    return joint_prob
 
 
 # This allows us to use the same formula for both mother and father and strwamline the code
@@ -168,13 +174,12 @@ def update(probabilities, one_gene, two_genes, have_trait, p):
     Which value for each distribution is updated depends on whether
     the person is in `have_gene` and `have_trait`, respectively.
     """
+
     for person in probabilities:
         gene = 2 if person in two_genes else 1 if person in one_gene else 0
         TorF = True if person in have_trait else False
         probabilities[person]["gene"][gene] += p
         probabilities[person]["trait"][TorF] += p
-
-    raise NotImplementedError
 
 
 def normalize(probabilities):
@@ -182,8 +187,21 @@ def normalize(probabilities):
     Update `probabilities` such that each probability distribution
     is normalized (i.e., sums to 1, with relative proportions the same).
     """
+    for person in probabilities:
 
-    raise NotImplementedError
+        total_probability_gene = sum(probabilities[person]["gene"].values())
+        total_probability_trait = sum(probabilities[person]["trait"].values())
+
+        for gene in probabilities[person]["gene"]:
+
+            probabilities[person]["gene"][gene] = (
+                probabilities[person]["gene"][gene]
+            ) / total_probability_gene
+
+        for TorF in probabilities[person]["trait"]:
+            probabilities[person]["trait"][TorF] = (
+                probabilities[person]["trait"][TorF] / total_probability_trait
+            )
 
 
 if __name__ == "__main__":
