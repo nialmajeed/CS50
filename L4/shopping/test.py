@@ -66,7 +66,7 @@ df["VisitorType"] = df["VisitorType"].astype("Int64")
 df["Weekend"] = df["Weekend"].apply(lambda x: 1 if x == True else 0)
 df["Weekend"] = df["Weekend"].astype("Int64")
 
-
+# this works but make it more ef
 # creating labels list from Revenue column
 labels = df["Revenue"].apply(lambda x: 1 if x == True else 0)
 labels = labels.values.tolist()
@@ -75,10 +75,11 @@ print(labels[0])
 # first we remove reveunue column
 df1 = df.drop("Revenue", axis=1)
 # now we turn the dataframe into a list of lists
+
 evidence = df1.values.tolist()
 
-tuple_evidence = tuple([l1, l2] for l2 in labels for l1 in evidence)
+print(evidence, labels)
 
-print(evidence[0])
-types = df.dtypes
-print(types)
+
+"""evidence = list(zip(*map(df1.get, df1)))
+"""

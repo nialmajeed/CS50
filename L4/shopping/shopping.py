@@ -62,6 +62,51 @@ def load_data(filename):
     is 1 if Revenue is true, and 0 otherwise.
     """
     df = pd.read_csv(filename)
+    Months = [
+        ("Jan", "0"),
+        ("Feb", "1"),
+        ("Mar", "2"),
+        ("Apr", "3"),
+        ("May", "4"),
+        ("June", "5"),
+        ("Jul", "6"),
+        ("Aug", "7"),
+        ("Sep", "8"),
+        ("Oct", "9"),
+        ("Nov", "10"),
+        ("Dec", "11"),
+    ]
+    # update months
+    for Month in Months:
+        df["Month"] = df["Month"].str.replace(Month[0], Month[1])
+    df["Month"] = df["Month"].astype("Int64")
+
+    # update visitors
+    df["VisitorType"] = df["VisitorType"].apply(
+        lambda x: 1 if x == "Returning_Visitor" else 0
+    )
+    df["VisitorType"] = df["VisitorType"].astype("Int64")
+
+    # update weekends
+    df["Weekend"] = df["Weekend"].apply(lambda x: 1 if x == True else 0)
+    df["Weekend"] = df["Weekend"].astype("Int64")
+
+    # this works but make it more ef
+    # creating labels list from Revenue column
+    labels = df["Revenue"].apply(lambda x: 1 if x == True else 0)
+    labels = labels.values.tolist()
+    print(labels[0])
+    # creating a list from each row
+    # first we remove reveunue column
+    df1 = df.drop("Revenue", axis=1)
+    # now we turn the dataframe into a list of lists
+    evidence = df1.values.tolist()
+    # create a tuple
+    # tuple_evidence = tuple([l1, l2] for l2 in labels for l1 in evidence)
+
+    """evidence = list(zip(*map(df1.get, df1)))
+    """
+    return (evidence, labels)
 
 
 def train_model(evidence, labels):
