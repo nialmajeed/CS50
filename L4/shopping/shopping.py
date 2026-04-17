@@ -115,15 +115,14 @@ def train_model(evidence, labels):
     fitted k-nearest neighbor model (k=1) trained on the data.
     """
     Model_knn = KNeighborsClassifier(n_neighbors=1)
-    # make training data
-    X_train, X_test, y_train, y_test = train_test_split(
-        evidence, labels, test_size=0.7, random_state=42
-    )
-    Model_knn.fit(X_train, y_train)
-    # predictions = Model_knn.predict(X_test)
+    # dont need to make training data as thats done by main module
+
+    Model_knn.fit(evidence, labels)
 
     return Model_knn
     # return predictions
+
+    ""
 
 
 def evaluate(labels, predictions):
@@ -141,7 +140,38 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    raise NotImplementedError
+    correct = 0
+    incorrect = 0
+    total = 0
+    TP = 0
+    TN = 0
+    FN = 0
+    FP = 0
+    for actual, predicted in zip(labels, predictions):
+        total += 1
+        if actual == predicted:
+            correct += 1
+            if actual == 1:
+                TP += 1
+
+            elif actual == 0:
+                TN += 1
+
+        else:
+            incorrect += 1
+            if actual == 1:
+                FN += 1
+            elif actual == 0:
+                FP += 1
+
+    sensitivity = TP / (
+        TP + FN
+    )  # This gives the True positives against total positives guessed
+    specificity = TN / (
+        TN + FP
+    )  # This gives the True Negatives against total Negatives guessed
+
+    return (sensitivity, specificity)
 
 
 if __name__ == "__main__":
