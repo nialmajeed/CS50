@@ -120,9 +120,10 @@ def train_model(evidence, labels):
         evidence, labels, test_size=0.7, random_state=42
     )
     Model_knn.fit(X_train, y_train)
-    predictions = Model_knn.predict(X_test, y_test)
+    # predictions = Model_knn.predict(X_test)
 
-    return predictions
+    return Model_knn
+    # return predictions
 
 
 def evaluate(labels, predictions):
