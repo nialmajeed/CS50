@@ -114,7 +114,15 @@ def train_model(evidence, labels):
     Given a list of evidence lists and a list of labels, return a
     fitted k-nearest neighbor model (k=1) trained on the data.
     """
-    raise NotImplementedError
+    Model_knn = KNeighborsClassifier(n_neighbors=1)
+    # make training data
+    X_train, X_test, y_train, y_test = train_test_split(
+        evidence, labels, test_size=0.7, random_state=42
+    )
+    Model_knn.fit(X_train, y_train)
+    predictions = Model_knn.predict(X_test, y_test)
+
+    return predictions
 
 
 def evaluate(labels, predictions):
