@@ -162,14 +162,14 @@ def iterate_pagerank(corpus, damping_factor):
 
         for page in corpus:
             surf_prob = 0
-            for Page2 in corpus:
-                # If Page2 has no links it picks randomly any corpus page:
-                if len(corpus[Page2]) == 0:
-                    surf_prob += current_rank[Page2] * initial_rank
+            for Pagei in corpus:
+                # If Pagei has no links it picks randomly any corpus page:
+                if len(corpus[Pagei]) == 0:
+                    surf_prob += current_rank[Pagei] * initial_rank
 
-                # Elif Page2 has a link to the initial page, it randomly picks a linked page on pag2:
-                elif page in corpus[Page2]:
-                    surf_prob += current_rank[Page2] / len(corpus[Page2])
+                # Elif Pagei has a link to the initial page, it randomly picks a linked page on pag2:
+                elif page in corpus[Pagei]:
+                    surf_prob += current_rank[Pagei] / len(corpus[Pagei])
                     # Calculate new page rank
                 rank = no_links + (damping_factor * surf_prob)
                 new_rank[page] = rank
