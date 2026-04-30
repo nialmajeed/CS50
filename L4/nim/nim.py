@@ -172,19 +172,24 @@ class NimAI:
         options is an acceptable return value.
         """
 
-        BAV = self.best_future_reward(state)
+        actions = Nim.available_actions(tuple(state))
+        BAV = 0
+        for action in actions:
 
-        if epsilon:
+            action_val = self.q.get((tuple(state), action))
+
+            action_val = action_val if action_val else 0
+
+            if BAV == None or action_val > BAV:
+                BAV = action_val
+                BA = action
+
+        if epsilon and random.random() <= self.epsilon:
             actions = Nim.available_actions(tuple(state))
-            random_action = random.choice(actions)
-
-            Value = random.choices(
-                [random_action, BAV], [self.epsilon, (1 - self.epsilon)]
-            )
-            return Value
-
+            return random.choice(list(actions))
         else:
-            return BAV
+
+            return BA
 
 
 def train(n):
