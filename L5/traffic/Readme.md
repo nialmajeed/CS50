@@ -20,7 +20,7 @@ Loss: A numerical value representing the error between predicted and actual outp
 Other Operations to consider: 
 Convoltion: Image convolution is applying a filter that adds each pixel value of an image to its neighbors, weighted according to a kernel matrix. Doing so alters the image and can help the neural network process it.
 
-![alt text] (https://github.com/nialmajeed/CS50/blob/d4ded90a51409dcca27db5a1055de7f4a1557c06/L5/traffic/convolution.png "Convolution example")
+![alt text](https://github.com/nialmajeed/CS50/blob/d4ded90a51409dcca27db5a1055de7f4a1557c06/L5/traffic/convolution.png "Convolution example")
 
 
 Pooling:
